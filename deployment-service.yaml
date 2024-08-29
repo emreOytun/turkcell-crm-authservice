@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authservice-deployment
+spec:
+  selector:
+    matchLabels:
+      app: authservice
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: authservice
+    spec:
+      containers:
+        - name: authservice
+          image: emreoytun/authservice:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8086  # Updated to match the application's port
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authservice-ssvc
+spec:
+  selector:
+    app: authservice
+  ports:
+    - protocol: "TCP"
+      port: 80             # Port exposed by the service
+      targetPort: 8086     # Port on which the application is listening
+  type: LoadBalancer
