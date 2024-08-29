@@ -45,7 +45,7 @@ spec:
     - host: ""  # Leave empty if not using a specific domain
       http:
         paths:
-          - path: /authservice(/|$)(.*)
+          - path: /authservice
             pathType: Prefix
             backend:
               service:
