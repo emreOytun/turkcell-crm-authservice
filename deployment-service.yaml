@@ -17,19 +17,37 @@ spec:
           image: emreoytun/authservice:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 8086  # Updated to match the application's port
+            - containerPort: 8086
       imagePullSecrets:
         - name: regcred
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: authservice-ssvc
+  name: authservice
 spec:
   selector:
     app: authservice
   ports:
     - protocol: "TCP"
-      port: 80             # Port exposed by the service
-      targetPort: 8086     # Port on which the application is listening
+      port: 80
+      targetPort: 8086
   type: LoadBalancer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+      http:
+        paths:
+          - path: /authservice(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: authservice
+                port:
+                  number: 80
