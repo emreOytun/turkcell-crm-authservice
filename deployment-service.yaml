@@ -24,7 +24,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: authservice
+  name: authservice-ssvc
 spec:
   selector:
     app: authservice
@@ -37,11 +37,12 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress
+  name: authservice-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   rules:
+    - host: ""  # Leave empty if not using a specific domain
       http:
         paths:
           - path: /authservice(/|$)(.*)
