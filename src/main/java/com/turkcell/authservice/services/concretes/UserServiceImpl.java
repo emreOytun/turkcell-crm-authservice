@@ -2,14 +2,15 @@ package com.turkcell.authservice.services.concretes;
 
 import com.turkcell.authservice.entities.Role;
 import com.turkcell.authservice.entities.User;
+import com.turkcell.authservice.entities.factories.UserFactory;
 import com.turkcell.authservice.repositories.RoleRepository;
 import com.turkcell.authservice.repositories.UserRepository;
 import com.turkcell.authservice.services.abstracts.UserService;
-import com.turkcell.pair3.core.services.abstracts.MessageService;
 import com.turkcell.pair3.core.events.RegisterEvent;
+import com.turkcell.pair3.core.exception.factories.AccessDeniedExceptionFactory;
 import com.turkcell.pair3.core.messages.Messages;
+import com.turkcell.pair3.core.services.abstracts.MessageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,30 +26,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username).orElseThrow(() -> new AccessDeniedException(messageService.getMessage(Messages.BusinessErrors.BILL_ACCOUNT_HAS_PRODUCT)));
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.BILL_ACCOUNT_HAS_PRODUCT)));
     }
 
     @Override
     public Integer add(RegisterEvent request) {
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        return userRepository.save(user).getId();
+        return userRepository.save(UserFactory.create(request.getEmail(), passwordEncoder.encode(request.getPassword()))).getId();
     }
 
     @Override
     public void giveRole(Integer id, Integer roleId) {
-        User user = userRepository.findById(id).orElseThrow(() -> new AccessDeniedException(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
+        User user = userRepository.findById(id).orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
         //find role with roleId
-        Role role = roleRepository.findById(roleId).orElseThrow(() -> new AccessDeniedException(messageService.getMessage(Messages.BusinessErrors.NO_ROLE_FOUND)));
+        Role role = roleRepository.findById(roleId).orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_ROLE_FOUND)));
         user.getAuthorities().add(role);
         userRepository.save(user);
     }
 
     @Override
     public void updateEmail(Integer id, String email) {
-        User user = userRepository.findById(id).orElseThrow(() -> new AccessDeniedException(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
+        User user = userRepository.findById(id).orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
         user.setEmail(email);
         userRepository.save(user);
     }
