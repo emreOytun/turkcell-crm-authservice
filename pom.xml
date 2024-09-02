@@ -116,7 +116,12 @@
 			<version>5.5.0</version>
 			<scope>test</scope>
 		</dependency>
-
+		<!-- Jacoco for code coverage analysis in SonarQube -->
+		<dependency>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>${jacoco-maven-plugin}</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
