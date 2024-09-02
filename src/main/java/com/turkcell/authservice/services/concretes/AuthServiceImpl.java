@@ -42,7 +42,7 @@ public class AuthServiceImpl implements AuthService {
                     user.getUsername(),
                     user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()
             );
-        } catch (AuthenticationException ex) {
+        } catch (Exception ex) {
             throw BusinessExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.WRONG_USERNAME_OR_PASSWORD));
         }
     }

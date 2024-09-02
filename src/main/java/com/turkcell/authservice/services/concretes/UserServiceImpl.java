@@ -26,8 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username)
-                .orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.BILL_ACCOUNT_HAS_PRODUCT)));
+        return searchUserByEmailOrThrowException(username);
     }
 
     @Override
@@ -37,17 +36,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void giveRole(Integer id, Integer roleId) {
-        User user = userRepository.findById(id).orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
-        //find role with roleId
-        Role role = roleRepository.findById(roleId).orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_ROLE_FOUND)));
+        User user = searchUserByIdOrThrowException(id);
+        Role role = searchRoleByIdOrThrowException(roleId);
         user.getAuthorities().add(role);
         userRepository.save(user);
     }
 
     @Override
     public void updateEmail(Integer id, String email) {
-        User user = userRepository.findById(id).orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
+        User user = searchUserByIdOrThrowException(id);
         user.setEmail(email);
         userRepository.save(user);
+    }
+
+    private User searchUserByEmailOrThrowException(String username) {
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
+    }
+
+    private User searchUserByIdOrThrowException(Integer id) {
+        return userRepository.findById(id).orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
+    }
+
+    private Role searchRoleByIdOrThrowException(Integer id) {
+        return roleRepository.findById(id).orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_ROLE_FOUND)));
     }
 }
