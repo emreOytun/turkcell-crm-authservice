@@ -21,7 +21,7 @@
 <!--		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>-->
 		<sonar.jacoco.reportPath>target/site/jacoco/jacoco.xml</sonar.jacoco.reportPath>
 <!--		<sonar.language>java</sonar.language>-->
-<!--		<surefire.version>2.17</surefire.version>-->
+		<surefire.version>2.17</surefire.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -151,11 +151,11 @@
 
 	<build>
 		<plugins>
-<!--			<plugin>-->
-<!--				<groupId>org.apache.maven.plugins</groupId>-->
-<!--				<artifactId>maven-surefire-plugin</artifactId>-->
-<!--				<version>${surefire.version}</version>-->
-<!--			</plugin>-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire.version}</version>
+			</plugin>
 <!--			<plugin>-->
 <!--				<groupId>org.sonarsource.scanner.maven</groupId>-->
 <!--				<artifactId>sonar-maven-plugin</artifactId>-->
@@ -168,6 +168,9 @@
 				<configuration>
 					<destFile>${sonar.jacoco.reportPath}</destFile>
 					<append>true</append>
+					<includes>
+						<include>**/*.class</include>
+					</includes>
 				</configuration>
 				<executions>
 					<execution>
