@@ -33,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String login(LoginRequest request) {
         try {
-            Authentication authentication = authenticationManager.authenticate(
+            authenticationManager.authenticate(
                         AuthenticationTokenFactory.createWithUsernamePassword(request.getEmail(), request.getPassword())
             );
 
