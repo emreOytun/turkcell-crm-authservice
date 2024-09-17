@@ -1,4 +1,4 @@
-package com.turkcell.authservice.core.configuration;
+package com.turkcell.authservice.configuration;
 
 import com.turkcell.pair3.core.configuration.BaseSecurityService;
 import lombok.RequiredArgsConstructor;
