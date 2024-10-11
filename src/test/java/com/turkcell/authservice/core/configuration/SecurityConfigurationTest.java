@@ -1,5 +1,6 @@
 package com.turkcell.authservice.core.configuration;
 
+import com.turkcell.authservice.configuration.SecurityConfiguration;
 import com.turkcell.authservice.controllers.AuthController;
 import com.turkcell.authservice.services.abstracts.AuthService;
 import com.turkcell.pair3.core.configuration.BaseSecurityService;
@@ -19,7 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Configuration
 class TestConfig {

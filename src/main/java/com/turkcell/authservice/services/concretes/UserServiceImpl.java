@@ -7,7 +7,7 @@ import com.turkcell.authservice.repositories.RoleRepository;
 import com.turkcell.authservice.repositories.UserRepository;
 import com.turkcell.authservice.services.abstracts.UserService;
 import com.turkcell.pair3.core.events.RegisterEvent;
-import com.turkcell.pair3.core.exception.factories.AccessDeniedExceptionFactory;
+import com.turkcell.pair3.core.exception.details.factories.ExceptionFactory;
 import com.turkcell.pair3.core.messages.Messages;
 import com.turkcell.pair3.core.services.abstracts.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -51,14 +51,14 @@ public class UserServiceImpl implements UserService {
 
     private User searchUserByEmailOrThrowException(String username) {
         return userRepository.findByEmail(username)
-                .orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
+                .orElseThrow(() -> ExceptionFactory.accessDeniedException(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
     }
 
     private User searchUserByIdOrThrowException(Integer id) {
-        return userRepository.findById(id).orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
+        return userRepository.findById(id).orElseThrow(() -> ExceptionFactory.accessDeniedException(messageService.getMessage(Messages.BusinessErrors.NO_USER_FOUND)));
     }
 
     private Role searchRoleByIdOrThrowException(Integer id) {
-        return roleRepository.findById(id).orElseThrow(() -> AccessDeniedExceptionFactory.createWithMessage(messageService.getMessage(Messages.BusinessErrors.NO_ROLE_FOUND)));
+        return roleRepository.findById(id).orElseThrow(() -> ExceptionFactory.accessDeniedException(messageService.getMessage(Messages.BusinessErrors.NO_ROLE_FOUND)));
     }
 }
